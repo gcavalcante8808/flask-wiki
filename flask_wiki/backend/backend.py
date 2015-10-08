@@ -6,7 +6,6 @@ from flask.ext.migrate import Migrate, MigrateCommand
 from flask_restful import Api
 from flask_marshmallow import Marshmallow
 
-
 # TODO: Verify URL prefix implementation if debug is true.
 # TODO: Verify Migrate Support.
 
@@ -30,15 +29,10 @@ else:
 
 api = Api(app)
 marsh = Marshmallow(app)
-migrate = Migrate(app)
+migrate = Migrate(app, db)
 manager = Manager(app)
 
-manager.add_command('db', Migrate)
-
-# Routing Configuration.
-# TODO: Avoiding Circular imports in this way is UGLY. Verify.
-from flask_wiki.backend.views import PageView
-api.add_resource(PageView,'/pages-list', endpoint='pages_list')
+manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
     manager.run()
