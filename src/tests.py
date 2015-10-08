@@ -21,8 +21,9 @@ class WikiTestCase(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(wiki.app.config['DATABASE'])
 
-    def test_rdbm_access(self):
-        pass
+    def test_index_access(self):
+        request = self.app.get('/')
+        assert 'Home' in str(request.data)
 
 if __name__ == '__main__':
     unittest.main()
