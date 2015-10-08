@@ -8,4 +8,7 @@ frontend = Blueprint(__file__, __name__,
 @frontend.route('/', defaults={'page': 'index'})
 @frontend.route('/<page>')
 def show(page):
-    return render_template('pages/%s.html' % page)
+    try:
+        return render_template('pages/%s.html' % page)
+    except (TemplateNotFound,):
+        abort(404)
