@@ -1,25 +1,13 @@
-import os
-from flask import Flask, Blueprint, render_template
-from flask.ext.sqlalchemy import SQLAlchemy
-from src.backend.backend import backend
-from src.frontend.frontend import frontend
-
-PROJECT_ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-
-app = Flask(__name__)
-app.register_blueprint(backend)
-app.register_blueprint(frontend)
-app.debug = True
-
-app.config['DATABASE'] = 'wiki.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////%s' % app.config.get('DATABASE')
-
-db = SQLAlchemy(app)
+from werkzeug.wsgi import DispatcherMiddleware
+from werkzeug.serving import run_simple
+from src.backend import backend
+from src.frontend import frontend
 
 
-def init_db(db):
-    # Create the db structure.
-    db.create_all()
+debug = True
+application = DispatcherMiddleware(frontend.app,
+                                   {'/api': backend.app})
 
-if __name__ == '__main__':
-    app.run()
+if debug:
+    run_simple('localhost', 8000, application, use_reloader=True,
+               use_debugger=True, use_evalex=True)

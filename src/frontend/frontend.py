@@ -1,15 +1,13 @@
-from flask import Blueprint, render_template, abort
+from flask import Flask, render_template, abort
 from jinja2 import TemplateNotFound
 
-frontend = Blueprint(__file__, __name__,
-                    template_folder='templates')
+app = Flask(__name__)
 
 
-@frontend.route('/', defaults={'page': 'index'})
-@frontend.route('/<page>')
+@app.route('/', defaults={'page': 'index'})
 def show(page):
     """
-    Try to Delive a page or abort with a 404 error.
+    Try to Deliver the default page.
     :param page: name of the page
     :return: template.
     """
