@@ -1,3 +1,4 @@
-include README.md
+include README.MD
+include README
 include LICENSE
-recursive-include src *
+recursive-include flask_wiki *
