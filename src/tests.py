@@ -1,6 +1,7 @@
 import unittest
 import os
 import tempfile
+from flask.ext.sqlalchemy import SQLAlchemy
 from src import wiki
 
 
@@ -13,7 +14,6 @@ class WikiTestCase(unittest.TestCase):
         # For Now, creates a temporary Database.
         self.db_fd, wiki.app.config['DATABASE'] = tempfile.mkstemp()
         wiki.app.config['TESTING'] = True
-        wiki.init_db(wiki.db)
         self.app = wiki.app.test_client()
 
     def tearDown(self):
