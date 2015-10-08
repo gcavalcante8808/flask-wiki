@@ -10,6 +10,7 @@ db = SQLAlchemy(app)
 
 
 def init_db(db):
+    # Create the db structure.
     db.create_all()
 
 if __name__ == '__main__':
