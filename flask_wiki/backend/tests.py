@@ -1,5 +1,5 @@
 from flask.ext.testing import TestCase
-from src.backend.backend import app, db
+from flask_wiki.backend.backend import app, db
 
 
 #TODO: Implement url_for based http ops.
@@ -15,7 +15,7 @@ class BackendTestCase(TestCase):
     def setUp(self):
         db.create_all()
 
-        from src.backend.models import Page
+        from flask_wiki.backend.models import Page
         self.page = Page()
         self.page.name = 'MainPage'
         self.page.path = '/'

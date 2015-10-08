@@ -1,5 +1,5 @@
 import unittest
-from src.frontend.frontend import app
+from flask_wiki.frontend.frontend import app
 
 
 class FrontEndTestCase(unittest.TestCase):

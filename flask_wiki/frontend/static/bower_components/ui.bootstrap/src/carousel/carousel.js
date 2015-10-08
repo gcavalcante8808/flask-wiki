@@ -222,13 +222,13 @@ angular.module('ui.bootstrap.carousel', [])
   <file name="index.html">
     <carousel>
       <slide>
-        <img src="http://placekitten.com/150/150" style="margin:auto;">
+        <img flask_wiki="http://placekitten.com/150/150" style="margin:auto;">
         <div class="carousel-caption">
           <p>Beautiful!</p>
         </div>
       </slide>
       <slide>
-        <img src="http://placekitten.com/100/150" style="margin:auto;">
+        <img flask_wiki="http://placekitten.com/100/150" style="margin:auto;">
         <div class="carousel-caption">
           <p>D'aww!</p>
         </div>
@@ -280,7 +280,7 @@ angular.module('ui.bootstrap.carousel', [])
 <div ng-controller="CarouselDemoCtrl">
   <carousel>
     <slide ng-repeat="slide in slides" active="slide.active" index="$index">
-      <img ng-src="{{slide.image}}" style="margin:auto;">
+      <img ng-flask_wiki="{{slide.image}}" style="margin:auto;">
       <div class="carousel-caption">
         <h4>Slide {{$index}}</h4>
         <p>{{slide.text}}</p>

@@ -60,7 +60,7 @@ module.exports = function(grunt) {
           banner: '<%= meta.banner %><%= meta.modules %>\n',
           footer: '<%= meta.cssInclude %>'
         },
-        src: [], //src filled in by build task
+        src: [], //flask_wiki filled in by build task
         dest: '<%= dist %>/<%= filename %>-<%= pkg.version %>.js'
       },
       dist_tpls: {
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
           banner: '<%= meta.banner %><%= meta.all %>\n<%= meta.tplmodules %>\n',
           footer: '<%= meta.cssInclude %>'
         },
-        src: [], //src filled in by build task
+        src: [], //flask_wiki filled in by build task
         dest: '<%= dist %>/<%= filename %>-tpls-<%= pkg.version %>.js'
       }
     },
@@ -207,7 +207,7 @@ module.exports = function(grunt) {
     }
   });
 
-  //Common ui.bootstrap module containing all modules for src and templates
+  //Common ui.bootstrap module containing all modules for flask_wiki and templates
   //findModule: Adds a given module to config
   var foundModules = {};
   function findModule(name) {
@@ -341,10 +341,10 @@ module.exports = function(grunt) {
 
     var srcFiles = _.pluck(modules, 'srcFiles');
     var tpljsFiles = _.pluck(modules, 'tpljsFiles');
-    //Set the concat task to concatenate the given src modules
+    //Set the concat task to concatenate the given flask_wiki modules
     grunt.config('concat.dist.src', grunt.config('concat.dist.src')
                  .concat(srcFiles));
-    //Set the concat-with-templates task to concat the given src & tpl modules
+    //Set the concat-with-templates task to concat the given flask_wiki & tpl modules
     grunt.config('concat.dist_tpls.src', grunt.config('concat.dist_tpls.src')
                  .concat(srcFiles).concat(tpljsFiles));
 

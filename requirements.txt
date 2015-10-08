@@ -1,4 +1,5 @@
 flask
+flask-Testing
 flask-SQLAlchemy
 flask-restful
 flask-script

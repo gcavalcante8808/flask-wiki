@@ -1,5 +1,5 @@
 from sqlalchemy import UniqueConstraint
-from src.backend.backend import db
+from flask_wiki.backend.backend import db
 
 
 #TODO: Add Owner and other security fields later.

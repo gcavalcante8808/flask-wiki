@@ -1,4 +1,4 @@
-from src.backend.backend import marsh
+from flask_wiki.backend.backend import marsh
 from marshmallow import fields
 
 

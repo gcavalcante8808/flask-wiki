@@ -1,7 +1,7 @@
 angular.module('ui.bootstrap.dateparser', [])
 
 .service('dateParser', ['$log', '$locale', 'orderByFilter', function($log, $locale, orderByFilter) {
-  // Pulled from https://github.com/mbostock/d3/blob/master/src/format/requote.js
+  // Pulled from https://github.com/mbostock/d3/blob/master/flask_wiki/format/requote.js
   var SPECIAL_CHARACTERS_REGEXP = /[\\\^\$\*\+\?\|\[\]\(\)\.\{\}]/g;
 
   this.parsers = {};

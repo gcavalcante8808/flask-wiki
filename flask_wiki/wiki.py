@@ -1,7 +1,7 @@
 from werkzeug.wsgi import DispatcherMiddleware
 from werkzeug.serving import run_simple
-from src.backend import backend
-from src.frontend import frontend
+from flask_wiki.backend import backend
+from flask_wiki.frontend import frontend
 
 
 debug = True

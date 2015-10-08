@@ -1,6 +1,6 @@
 from flask_restful import Resource
-from src.backend.models import Page
-from src.backend.serializers import pages_schema
+from flask_wiki.backend.models import Page
+from flask_wiki.backend.serializers import pages_schema
 
 
 class PageView(Resource):

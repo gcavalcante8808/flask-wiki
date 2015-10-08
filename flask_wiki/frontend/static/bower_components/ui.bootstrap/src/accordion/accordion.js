@@ -101,7 +101,7 @@ angular.module('ui.bootstrap.accordion', ['ui.bootstrap.collapse'])
 
 // Use accordion-heading below an accordion-group to provide a heading containing HTML
 // <accordion-group>
-//   <accordion-heading>Heading containing HTML - <img src="..."></accordion-heading>
+//   <accordion-heading>Heading containing HTML - <img flask_wiki="..."></accordion-heading>
 // </accordion-group>
 .directive('accordionHeading', function() {
   return {
