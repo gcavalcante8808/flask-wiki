@@ -1,10 +1,9 @@
 import unittest
-from flask import url_for
 import os
 import tempfile
 from src.backend.backend import app
 
-
+#TODO: Implement url_for based http ops.
 class BackendTestCase(unittest.TestCase):
     def setUp(self):
         # For Now, creates a temporary Database.
@@ -18,7 +17,7 @@ class BackendTestCase(unittest.TestCase):
         os.unlink(app.config['DATABASE'])
 
     def test_get_list_of_pages(self):
-        request = self.app.get(url_for('pages'))
+        request = self.app.get('/pages-list')
         self.assertEqual(request.status_code, 200)
 
 if __name__ == '__main__':
