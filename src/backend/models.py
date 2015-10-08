@@ -1,13 +1,16 @@
+from sqlalchemy import UniqueConstraint
 from src.backend.backend import db
 
 
+#TODO: Add Owner and other security fields later.
 class Page(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     path = db.Column(db.String)
     raw_content = db.Column(db.Text)
     rendered_content = db.Column(db.Text)
-    public = db.Column(db.Boolean, default=True)
+
+    UniqueConstraint('name','path')
 
     def __repr__(self):
         return "<Page %s %s>" % (self.path, self.name)
