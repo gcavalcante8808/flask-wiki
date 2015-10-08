@@ -1,4 +1,5 @@
 import unittest
+from flask import url_for
 import os
 import tempfile
 from src.backend.backend import app
@@ -17,7 +18,7 @@ class BackendTestCase(unittest.TestCase):
         os.unlink(app.config['DATABASE'])
 
     def test_get_list_of_pages(self):
-        request = self.app.get('/api/pages')
+        request = self.app.get(url_for('pages'))
         self.assertEqual(request.status_code, 200)
 
 if __name__ == '__main__':
