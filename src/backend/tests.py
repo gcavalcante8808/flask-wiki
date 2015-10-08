@@ -1,17 +1,19 @@
-import unittest
-import os
-import tempfile
+from flask.ext.testing import TestCase
 from src.backend.backend import app, db
 
 
 #TODO: Implement url_for based http ops.
 #TODO: Try to use mixer to mock the tests.
-class BackendTestCase(unittest.TestCase):
-    def setUp(self):
-        # For Now, creates a temporary Database.
-        self.db_fd, app.config['DATABASE'] = tempfile.mkstemp()
+class BackendTestCase(TestCase):
+    SQLALCHEMY_DATABASE_URI = "sqlite://"
+    TESTING = True
+
+    def create_app(self):
         app.config['TESTING'] = True
-        self.app = app.test_client()
+        return app
+
+    def setUp(self):
+        db.create_all()
 
         from src.backend.models import Page
         self.page = Page()
@@ -22,14 +24,9 @@ class BackendTestCase(unittest.TestCase):
         db.session.commit()
 
     def tearDown(self):
-        # For now, unlink the temp db created.
-        os.close(self.db_fd)
-        os.unlink(app.config['DATABASE'])
+        db.session.remove()
+        db.drop_all()
 
     def test_get_list_of_pages(self):
-        request = self.app.get('/pages-list')
-        self.assertEqual(request.status_code, 200)
-        self.assertIn(self.page.name, str(request.data))
-
-if __name__ == '__main__':
-    unittest.main()
+        response = self.client.get('/pages-list')
+        self.assertIn(self.page.name, str(response.data))
