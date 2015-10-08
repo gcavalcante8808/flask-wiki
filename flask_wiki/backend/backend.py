@@ -1,11 +1,10 @@
 import os
 from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask_restful import Api
 from flask_marshmallow import Marshmallow
-
+from flask_wiki.backend.models import db
 # TODO: Verify URL prefix implementation if debug is true.
 # TODO: Verify Migrate Support.
 
@@ -21,11 +20,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////%s/%s' % (PROJECT_ROOT_PATH,
                                                               app.config.get('DATABASE'))
 
 # Database Configuration
+# Use test_request_context is some kind of sorcery, but works?!
 if app.config['BOOTSTRAP'] is True:
-    db = SQLAlchemy(app)
-    db.create_all()
+    with app.test_request_context():
+        db.init_app(app)
+        db.create_all()
 else:
-    db = SQLAlchemy(app)
+    db.init_app(app)
 
 api = Api(app)
 marsh = Marshmallow(app)
