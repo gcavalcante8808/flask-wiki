@@ -20,10 +20,10 @@ class Page(db.Model):
     raw_content = db.Column(db.Text)
     rendered_content = db.Column(db.Text)
 
-    UniqueConstraint('lft','rgt')
+    UniqueConstraint('lft', 'rgt')
 
     def __repr__(self):
-        return "<Page %s %s>" % (self.path, self.name)
+        return "<Page %i,%i %s>" % (self.lft, self.rgt, self.name)
 
     def __str__(self):
         return self.name
