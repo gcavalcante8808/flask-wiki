@@ -1,12 +1,13 @@
 from sqlalchemy import UniqueConstraint
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask_wiki.backend.custom_fields import GUIDField
 
 db = SQLAlchemy()
 
 
 #TODO: Add Owner and other security fields later.
 class Page(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    guid = db.Column(GUIDField, primary_key=True)
     name = db.Column(db.String)
     path = db.Column(db.String)
     raw_content = db.Column(db.Text)
