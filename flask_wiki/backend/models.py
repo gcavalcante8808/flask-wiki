@@ -62,6 +62,11 @@ class Page(db.Model):
         result = self.query.filter(text('lft = (rgt - 1)')).all()
         return result
 
+    @property
+    def height(self):
+        # Return the height of the tree
+        return self.root.rgt / 2
+
 
 @event.listens_for(Page, 'before_insert')
 def page_defaults(mapper, configuration, target):
