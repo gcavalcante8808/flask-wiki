@@ -5,7 +5,7 @@ from sqlalchemy import event
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_wiki.backend.custom_fields import GUIDField
 
-db = SQLAlchemy()
+db = SQLAlchemy(session_options={'expire_on_commit': False})
 
 
 #TODO: Add Owner and other security fields later.
@@ -68,3 +68,10 @@ def page_defaults(mapper, configuration, target):
     # If no RGT is provided, one will be generated using lft column.
     if not target.rgt:
         target.rgt = target.lft + 1
+
+@event.listens_for(Page, 'before_insert')
+@event.listens_for(Page, 'before_delete')
+def update_root_rgt(mapper, configuration, target):
+    # Time to update the RGT of root object.
+    new_rgt = Page.query.count() * 2
+    target.query.filter_by(lft=1).update(values={'rgt':new_rgt})
