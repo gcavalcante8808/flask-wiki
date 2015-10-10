@@ -1,7 +1,6 @@
 from flask.ext.testing import TestCase
-from flask_wiki.backend.backend import app, db
+from flask_wiki.backend.backend import app, db, mixer
 from flask_wiki.backend.custom_serialization_fields import GUIDSerializationField
-import uuid
 
 
 #TODO: Implement url_for based http ops.
@@ -24,13 +23,7 @@ class BackendTestCase(TestCase):
 
         from flask_wiki.backend.models import Page
 
-        self.page = Page()
-        self.page.guid = uuid.uuid4()
-        self.page.name = 'MainPage'
-        self.page.path = '/'
-
-        db.session.add(self.page)
-        db.session.commit()
+        self.page = mixer.blend(Page)
 
     def tearDown(self):
         # Remove the temp database created.
@@ -41,10 +34,10 @@ class BackendTestCase(TestCase):
     def test_get_list_of_pages(self):
         response = self.client.get('/pages-list')
         # Can we Find the Main Page in the response?
-        self.assertIn(self.page.name, response.json[0].values())
+        self.assertIn(self.page.name, str(response.data))
 
         # Can we find a GUID key.
-        self.assertIn('guid', response.json[0].keys())
+        self.assertIn('guid', str(response.data))
 
         # The Guid is Valid?
         # Testing Customized Serialization Field

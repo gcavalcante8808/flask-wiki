@@ -4,6 +4,7 @@ from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask_restful import Api
 from flask_marshmallow import Marshmallow
+from mixer.backend.flask import mixer
 from flask_wiki.backend.models import db
 # TODO: Verify URL prefix implementation if debug is true.
 # TODO: Verify Migrate Support.
@@ -32,6 +33,7 @@ api = Api(app)
 marsh = Marshmallow(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
+mixer.init_app(app)
 
 manager.add_command('db', MigrateCommand)
 

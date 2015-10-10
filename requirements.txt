@@ -5,3 +5,5 @@ flask-restful
 flask-script
 flask-marshmallow
 marshmallow-sqlalchemy
+flask-migrate
+mixer
