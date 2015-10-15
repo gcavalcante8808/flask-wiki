@@ -4,7 +4,6 @@ import uuid
 
 class GUIDSerializationField(fields.Field):
     def _serialize(self, value, attr, obj):
-        print(value)
         if value is None:
             return value
         else:
