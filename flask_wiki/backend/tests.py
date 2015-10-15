@@ -2,7 +2,6 @@ from flask.ext.testing import TestCase
 from flask_wiki.backend.models import Page
 from flask_wiki.backend.backend import app, db, mixer
 from flask_wiki.backend.custom_serialization_fields import GUIDSerializationField
-from flask_wiki.backend.models import apply_monotonic_transformation
 
 
 #TODO: Implement url_for based http ops.
@@ -43,6 +42,7 @@ class BackendTestCase(TestCase):
         result = GUIDSerializationField().deserialize(response.json[0]['guid'])
         self.assertTrue(result)
 
-    def test_monololithic_transformation(self):
-        uncle = Page.query.filter_by(name='Roseomar').all()[0]
-        apply_monotonic_transformation(uncle)
+    # DEACTIVATED
+    # def test_monololithic_transformation(self):
+    #     uncle = Page.query.filter_by(name='Roseomar').all()[0]
+    #     apply_monotonic_transformation(uncle)
