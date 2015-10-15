@@ -16,7 +16,7 @@ class Page(db.Model):
     left and right methods (named lft and rgt because of SQL99
     name restrictions)
     """
-    guid = db.Column(GUIDField, primary_key=True, default=uuid.uuid4())
+    guid = db.Column(GUIDField, primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String, nullable=False)
     lft = db.Column(db.Integer, nullable=False)
     rgt = db.Column(db.Integer)
@@ -59,13 +59,22 @@ class Page(db.Model):
     @property
     def leafs(self):
         # Return list of Leafs (Nodes without Children)
-        result = self.query.filter(text('lft = (rgt - 1)')).all()
+        result = self.query.filter(text('lft =(rgt - 1)')).all()
         return result
 
     @property
-    def height(self):
+    def width(self):
         # Return the height of the tree
-        return self.root.rgt / 2
+        return self.rgt - self.lft
+
+    @property
+    def parent(self):
+        return self.query.filter(text('lft = (:olft - 1)').
+                                 bindparams(olft=self.lft)).all()
+
+    @property
+    def childs(self):
+        return self.query.filter(Page.lft.between(self.lft, self.rgt)).all()
 
 
 @event.listens_for(Page, 'before_insert')
@@ -74,9 +83,36 @@ def page_defaults(mapper, configuration, target):
     if not target.rgt:
         target.rgt = target.lft + 1
 
+
 @event.listens_for(Page, 'before_insert')
 @event.listens_for(Page, 'before_delete')
 def update_root_rgt(mapper, configuration, target):
     # Time to update the RGT of root object.
+    # TODO: Verify if the target is root itself.
     new_rgt = Page.query.count() * 2
-    target.query.filter_by(lft=1).update(values={'rgt':new_rgt})
+    target.query.filter_by(lft=1).update(values={'rgt': new_rgt})
+
+
+# Implementar transformação monotônica de conjuntos para lft e rgt.
+def apply_monotonic_transformation(root):
+    root = Page.query.filter_by(name=root.name).all()[0]
+    leaf = Page.query.filter_by(name=root.name).filter(text('lft = (rgt -1)')).all()
+
+    child = Page()
+    child.name = 'Tio2'
+    # If the parent is a leaf, just create a new child using the rgt as base value.
+    if leaf:
+        child.lft = root.lft + 1
+        child.rgt = child.lft + 1
+        root.rgt = child.rgt + 1
+
+    else:
+        # TODO: Not Working, need some way to extract a 'Level' of the object.
+        last_child = Page.query.filter(Page.lft.between(root.lft, root.rgt)).all()[-1:][0]
+        child.lft = last_child.rgt + 1
+        child.rgt = child.lft +1
+
+        root.rgt = child.rgt + 1
+
+    db.session.add(child)
+    db.session.commit()
