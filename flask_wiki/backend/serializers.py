@@ -12,6 +12,7 @@ class PageSchema(marsh.Schema):
     name = fields.String()
     raw_content = fields.String()
     rendered_content = fields.String()
+    slug = fields.String()
 
 
 
