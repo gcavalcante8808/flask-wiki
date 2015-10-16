@@ -1,14 +1,31 @@
-from flask_restful import Resource, reqparse
-from flask_wiki.backend.models import Page,db
+from flask import abort
+from flask_restful import Resource, reqparse, fields, marshal_with, marshal
+from flask_wiki.backend.models import Page, db
 from flask_wiki.backend.serializers import pages_schema, page_schema
 
 
+page_fields = {
+    'guid': fields.String,
+    'name': fields.String,
+    'raw_content': fields.String,
+    'rendered_content': fields.String,
+    'slug': fields.String
+}
+
+page_parser = reqparse.RequestParser()
+page_parser.add_argument('guid', type=str, required=False)
+page_parser.add_argument('name', type=str, required=False)
+page_parser.add_argument('raw_content', type=str,required=False)
+page_parser.add_argument('rendered_content', type=str, required=False)
+page_parser.add_argument('slug', type=str, required=False)
+
+
 class PageView(Resource):
+    @marshal_with(page_fields)
     def get(self):
         # Just Dump all Pages for now.
         pages = Page.query.all()
-        result = pages_schema.dump(pages)
-        return result.data
+        return pages
 
     def post(self):
         # Get a a object and verify if exists; if it does, return a 422 code and if not, create it.
@@ -45,10 +62,25 @@ class PageView(Resource):
 
 
 class PageDetail(Resource):
+    @marshal_with(page_fields)
     def get(self, slug):
+        result = Page.query.filter_by(slug=slug).first()
+        if not result:
+            abort(404, message="Page {} doesn't exist.".format(slug))
+        return result
+
+    def patch(self, slug):
         result = Page.query.filter_by(slug=slug).first()
         if not result:
             return 404
 
-        serializer = page_schema.dump(result)
-        return {'data': serializer.data}, 200
+        args = page_parser.parse_args()
+
+        for key, value in args.items():
+            if value is not None:
+                setattr(result, key, value)
+
+        db.session.add(result)
+        db.session.commit()
+
+        return marshal(result, page_fields), 204
