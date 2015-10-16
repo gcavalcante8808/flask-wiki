@@ -42,7 +42,13 @@ class BackendTestCase(TestCase):
         result = GUIDSerializationField().deserialize(response.json[0]['guid'])
         self.assertTrue(result)
 
-    # DEACTIVATED
-    # def test_monololithic_transformation(self):
-    #     uncle = Page.query.filter_by(name='Roseomar').all()[0]
-    #     apply_monotonic_transformation(uncle)
+
+    def test_create_new_page(self):
+        headers = {'Content-Type': 'application/json' }
+        data = {
+            'name': 'Unittest Page',
+            'raw_content': 'My Title=====',
+        }
+        response = self.client.post('/pages-list', data=data, headers=headers)
+
+        self.assertEqual(response.status_code, 201)
