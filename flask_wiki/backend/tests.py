@@ -1,7 +1,10 @@
+import os
 from flask.ext.testing import TestCase
 from flask_wiki.backend.models import Page
-from flask_wiki.backend.backend import app, db, mixer
+from flask_wiki.backend.backend import db, mixer, app
 from flask_wiki.backend.custom_serialization_fields import GUIDSerializationField
+
+os.environ['CONFIG_MODULE'] = 'config.test'
 
 
 #TODO: Implement url_for based http ops.
@@ -14,20 +17,17 @@ class BackendTestCase(TestCase):
     TESTING = True
 
     def create_app(self):
-        # Put the application in testing mode.
-        app.config['TESTING'] = True
         return app
 
-    def setUp(self):
+    def setUp(self, **kwargs):
         # Create a temp database and create an Page Object.
         db.create_all()
         self.page = mixer.blend(Page)
 
     def tearDown(self):
         # Remove the temp database created.
-        # db.session.remove()
-        # db.drop_all()
-        pass
+        db.session.remove()
+        db.drop_all()
 
     def test_get_list_of_pages(self):
         response = self.client.get('/pages-list')
@@ -44,11 +44,15 @@ class BackendTestCase(TestCase):
 
 
     def test_create_new_page(self):
-        headers = {'Content-Type': 'application/json' }
+        header={ "Content-Type": "application/json"}
         data = {
-            'name': 'Unittest Page',
-            'raw_content': 'My Title=====',
+            "name": "Unittest Page",
+            "raw_content": "My Title\n=====",
         }
-        response = self.client.post('/pages-list', data=data, headers=headers)
+        response = self.client.post('/pages-list', data=data)
 
         self.assertEqual(response.status_code, 201)
+
+        # Try to submit the same data again, a 422 code is expected
+        response = self.client.post('/pages-list', data=data)
+        self.assertEqual(response.status_code, 422)
