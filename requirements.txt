@@ -7,3 +7,4 @@ flask-marshmallow
 marshmallow-sqlalchemy
 flask-migrate
 mixer
+python-slugify
