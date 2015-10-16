@@ -3,6 +3,7 @@ from flask.ext.testing import TestCase
 from flask_wiki.backend.models import Page
 from flask_wiki.backend.backend import db, mixer, app
 from flask_wiki.backend.custom_serialization_fields import GUIDSerializationField
+from slugify import slugify
 
 os.environ['CONFIG_MODULE'] = 'config.test'
 
@@ -25,7 +26,7 @@ class BackendTestCase(TestCase):
         self.page = mixer.blend(Page)
 
     def tearDown(self):
-        # Remove the temp database created.
+        # TODO: FUCKING TRASH USING PRODUCTION DB.
         db.session.remove()
         db.drop_all()
 
@@ -44,6 +45,8 @@ class BackendTestCase(TestCase):
 
 
     def test_create_new_page(self):
+        # Try to create a New page using the API.
+        #TODO: Headers are not working with flask testing. Verify.
         header={ "Content-Type": "application/json"}
         data = {
             "name": "Unittest Page",
@@ -56,3 +59,25 @@ class BackendTestCase(TestCase):
         # Try to submit the same data again, a 422 code is expected
         response = self.client.post('/pages-list', data=data)
         self.assertEqual(response.status_code, 422)
+
+    def test_get_specific_page(self):
+        # Try to look for a specific page.
+        slug = slugify(self.page.name)
+        response = self.client.get('/pages/%s' % slug)
+
+        self.assertEqual(response.status_code, 200)
+
+        # Find the raw_content of the page.
+        self.assertIn(self.page.raw_content, str(response.data))
+
+
+    def test_patch_existing_page(self):
+        # Try to update a existing resource.
+        data = {
+            'raw_content': "UnitTest\n======="
+        }
+        response = self.client.patch('/pages/unittest-page', data=data)
+
+        self.assertEqual(response.status_code, 204)
+
+        self.fail('Finishi the patch TEST on page-detail.')
