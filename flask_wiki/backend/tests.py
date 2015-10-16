@@ -43,14 +43,13 @@ class BackendTestCase(TestCase):
         result = GUIDSerializationField().deserialize(response.json[0]['guid'])
         self.assertTrue(result)
 
-
     def test_create_new_page(self):
         # Try to create a New page using the API.
-        #TODO: Headers are not working with flask testing. Verify.
+        # TODO: Headers are not working with flask testing. Verify.
         header={ "Content-Type": "application/json"}
         data = {
             "name": "Unittest Page",
-            "raw_content": "My Title\n=====",
+            "raw_content": "My Title\n====="
         }
         response = self.client.post('/pages-list', data=data)
 
@@ -70,14 +69,15 @@ class BackendTestCase(TestCase):
         # Find the raw_content of the page.
         self.assertIn(self.page.raw_content, str(response.data))
 
-
     def test_patch_existing_page(self):
         # Try to update a existing resource.
         data = {
-            'raw_content': "UnitTest\n======="
+            "raw_content": "UnitTest\n=======",
+            "slug": "unittest-page"
         }
+        # TODO: Verify why the response is 200 but in brower it returns 204 correctly.
         response = self.client.patch('/pages/unittest-page', data=data)
 
         self.assertEqual(response.status_code, 204)
 
-        self.fail('Finishi the patch TEST on page-detail.')
+        self.fail('Finish the patch TEST on page-detail.')
