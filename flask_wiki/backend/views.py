@@ -18,11 +18,15 @@ class PageView(Resource):
         serializer = page_schema.dump(args)
 
         if serializer.data and not serializer.errors:
+            r = Page.query.filter_by(name=serializer.data.get('name', None)).first()
+            if r:
+                return {'data': serializer.data,
+                        'message': "The object already exist. Use PATC to update the object."}, 422
+
             result = Page()
             result.raw_content = serializer.data.get('raw_content')
             result.name = serializer.data.get('name')
 
-            print(result)
             db.session.add(result)
             db.session.commit()
             return {'data': serializer.data}, 201
