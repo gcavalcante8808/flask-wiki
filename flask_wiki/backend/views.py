@@ -42,3 +42,13 @@ class PageView(Resource):
     def patch(self):
         # Stub for NotImplemented
         return 501
+
+
+class PageDetail(Resource):
+    def get(self, slug):
+        result = Page.query.filter_by(slug=slug).first()
+        if not result:
+            return 404
+
+        serializer = page_schema.dump(result)
+        return {'data': serializer.data}, 200
