@@ -8,8 +8,7 @@ from slugify import slugify
 os.environ['CONFIG_MODULE'] = 'config.test'
 
 
-#TODO: Implement url_for based http ops.
-#TODO: Try to use mixer to mock the tests.
+# TODO: Implement url_for based http ops.
 class BackendTestCase(TestCase):
     """
     Test all Backend API EndPoints.
@@ -46,7 +45,7 @@ class BackendTestCase(TestCase):
     def test_create_new_page(self):
         # Try to create a New page using the API.
         # TODO: Headers are not working with flask testing. Verify.
-        header={ "Content-Type": "application/json"}
+        header={"Content-Type": "application/json"}
         data = {
             "name": "Unittest Page",
             "raw_content": "My Title\n====="
@@ -54,6 +53,9 @@ class BackendTestCase(TestCase):
         response = self.client.post('/pages-list', data=data)
 
         self.assertEqual(response.status_code, 201)
+
+        # Verify if the correct HTML for Markdown was returned
+        self.assertIn('<h1>My Title</h1>', str(response.data))
 
         # Try to submit the same data again, a 422 code is expected
         response = self.client.post('/pages-list', data=data)
@@ -73,11 +75,26 @@ class BackendTestCase(TestCase):
         # Try to update a existing resource.
         data = {
             "raw_content": "UnitTest\n=======",
-            "slug": "unittest-page"
         }
-        # TODO: Verify why the response is 200 but in brower it returns 204 correctly.
+        # TODO: Verify why the response is 200 but in browser it returns 204 correctly.
         response = self.client.patch('/pages/unittest-page', data=data)
 
+        self.fail('The test cant find the specified page for now. Browser is working.')
         self.assertEqual(response.status_code, 204)
 
-        self.fail('Finish the patch TEST on page-detail.')
+        response = self.client.get('/pages/unittest-page')
+
+        self.assertIn('UnitTest\n', str(response.data))
+
+    def test_preview_markdown_page(self):
+        # Test if we can preview a md content as HTML.
+        txt = "My New Page\n========="
+
+        data = {
+            "raw_content": txt
+        }
+        response = self.client.post('/md-render', data=data)
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn('<h1>My New Page</h1>', str(response.data))

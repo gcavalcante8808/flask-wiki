@@ -70,6 +70,11 @@ class PageView(Resource):
 
 class PageDetail(Resource):
     def get(self, slug):
+        """
+        Return a specific object.
+        :param slug:
+        :return:
+        """
         result = Page.query.filter_by(slug=slug).first()
 
         if not result:
@@ -78,6 +83,11 @@ class PageDetail(Resource):
         return marshal(result, page_fields), 200
 
     def patch(self, slug):
+        """
+        Receive partial updates for an existing object.
+        :param slug:
+        :return:
+        """
         result = Page.query.filter_by(slug=slug).first()
         if not result:
             return 404
@@ -92,3 +102,16 @@ class PageDetail(Resource):
         db.session.commit()
 
         return marshal(result, page_fields), 204
+
+
+class MDRender(Resource):
+    """
+     Take a markdown text and render into HTML.
+    """
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('raw_content', type=str)
+
+        args = parser.parse_args()
+
+        return render_markdown(args.get('raw_content'))
