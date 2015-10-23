@@ -1,4 +1,5 @@
 import os
+from flask import url_for
 from flask.ext.testing import TestCase
 from flask_wiki.backend.models import Page
 from flask_wiki.backend.backend import db, mixer, app
@@ -8,7 +9,6 @@ from slugify import slugify
 os.environ['CONFIG_MODULE'] = 'config.test'
 
 
-# TODO: Implement url_for based http ops.
 class BackendTestCase(TestCase):
     """
     Test all Backend API EndPoints.
@@ -30,7 +30,7 @@ class BackendTestCase(TestCase):
         db.drop_all()
 
     def test_get_list_of_pages(self):
-        response = self.client.get('/pages-list')
+        response = self.client.get(url_for('pages-list'))
         # Can we Find the Main Page in the response?
         self.assertIn(self.page.name, str(response.data))
 
@@ -45,12 +45,13 @@ class BackendTestCase(TestCase):
     def test_create_new_page(self):
         # Try to create a New page using the API.
         # TODO: Headers are not working with flask testing. Verify.
+        url = url_for('pages-list')
         header={"Content-Type": "application/json"}
         data = {
             "name": "Unittest Page",
             "raw_content": "My Title\n====="
         }
-        response = self.client.post('/pages-list', data=data)
+        response = self.client.post(url, data=data)
 
         self.assertEqual(response.status_code, 201)
 
@@ -58,13 +59,15 @@ class BackendTestCase(TestCase):
         self.assertIn('<h1>My Title</h1>', str(response.data))
 
         # Try to submit the same data again, a 422 code is expected
-        response = self.client.post('/pages-list', data=data)
+        response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 422)
 
     def test_get_specific_page(self):
         # Try to look for a specific page.
         slug = slugify(self.page.name)
-        response = self.client.get('/pages/%s' % slug)
+        url = url_for('page-detail', slug=slug)
+
+        response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
 
@@ -73,16 +76,18 @@ class BackendTestCase(TestCase):
 
     def test_patch_existing_page(self):
         # Try to update a existing resource.
+        url = url_for('page-detail', slug='unittest-page')
+
         data = {
             "raw_content": "UnitTest\n=======",
         }
         # TODO: Verify why the response is 200 but in browser it returns 204 correctly.
-        response = self.client.patch('/pages/unittest-page', data=data)
+        response = self.client.patch(url, data=data)
 
         self.fail('The test cant find the specified page for now. Browser is working.')
         self.assertEqual(response.status_code, 204)
 
-        response = self.client.get('/pages/unittest-page')
+        response = self.client.get(url)
 
         self.assertIn('UnitTest\n', str(response.data))
 
@@ -93,7 +98,7 @@ class BackendTestCase(TestCase):
         data = {
             "raw_content": txt
         }
-        response = self.client.post('/md-render', data=data)
+        response = self.client.post(url_for('md-render'), data=data)
 
         self.assertEqual(response.status_code, 200)
 
