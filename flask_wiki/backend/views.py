@@ -1,3 +1,4 @@
+import markdown2
 from flask import abort
 from flask_restful import Resource, reqparse, fields, marshal_with, marshal
 from flask_wiki.backend.models import Page, db
@@ -19,6 +20,15 @@ page_parser.add_argument('rendered_content', type=str, required=False)
 page_parser.add_argument('slug', type=str, required=False)
 
 
+def render_markdown(text):
+    """
+    Take a markdown text and render into HTML.
+    :param text:
+    :return:
+    """
+    return markdown2.markdown(text)
+
+
 class PageView(Resource):
     @marshal_with(page_fields)
     def get(self):
@@ -32,6 +42,7 @@ class PageView(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('raw_content', type=str)
         parser.add_argument('name', type=str)
+        parser.add_argument('rendered_content', type=str)
         args = parser.parse_args()
 
         serializer = page_schema.dump(args)
@@ -45,7 +56,7 @@ class PageView(Resource):
             result = Page()
             result.raw_content = serializer.data.get('raw_content')
             result.name = serializer.data.get('name')
-
+            result.rendered_content = render_markdown(result.raw_content)
             db.session.add(result)
             db.session.commit()
             return {'data': serializer.data}, 201
