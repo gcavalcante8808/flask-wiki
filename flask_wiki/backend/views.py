@@ -1,8 +1,7 @@
 from flask import abort
 from flask_restful import Resource, reqparse, fields, marshal_with, marshal
 from flask_wiki.backend.models import Page, db
-from flask_wiki.backend.serializers import pages_schema, page_schema
-
+from flask_wiki.backend.serializers import page_schema
 
 page_fields = {
     'guid': fields.String,
@@ -27,6 +26,7 @@ class PageView(Resource):
         pages = Page.query.all()
         return pages
 
+    # TODO: Migrate post format to marshal.
     def post(self):
         # Get a a object and verify if exists; if it does, return a 422 code and if not, create it.
         parser = reqparse.RequestParser()
