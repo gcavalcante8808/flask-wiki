@@ -9,3 +9,4 @@ flask-migrate
 mixer
 python-slugify
 markdown2
+slugify
