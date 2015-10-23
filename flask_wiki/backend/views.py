@@ -1,6 +1,5 @@
 import markdown2
-from flask import abort
-from flask_restful import Resource, reqparse, fields, marshal_with, marshal
+from flask_restful import Resource, reqparse, fields, marshal_with, marshal, abort
 from flask_wiki.backend.models import Page, db
 
 page_fields = {
@@ -55,6 +54,7 @@ class PageView(Resource):
         result.rendered_content = render_markdown(result.raw_content)
         db.session.add(result)
         db.session.commit()
+
         return marshal(result, page_fields), 201
 
         #return serializer.errors, 400
@@ -69,12 +69,13 @@ class PageView(Resource):
 
 
 class PageDetail(Resource):
-    @marshal_with(page_fields)
     def get(self, slug):
         result = Page.query.filter_by(slug=slug).first()
+
         if not result:
-            abort(404, message="Page {} doesn't exist.".format(slug))
-        return result
+            abort(404)
+
+        return marshal(result, page_fields), 200
 
     def patch(self, slug):
         result = Page.query.filter_by(slug=slug).first()
