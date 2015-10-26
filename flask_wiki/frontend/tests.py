@@ -1,7 +1,6 @@
-from flask import url_for
 from xvfbwrapper import Xvfb
-from flask.ext.testing import LiveServerTestCase
 from selenium import webdriver
+from flask.ext.testing import LiveServerTestCase
 from flask_wiki.frontend.frontend import app
 
 
@@ -27,7 +26,12 @@ class FrontendTestCase(LiveServerTestCase):
         :return:
         """
         url = self.get_server_url()
-        print(url)
         self.browser.get(url)
 
+        # Can we see the right value on title bar?
         self.assertIn('Home', self.browser.title)
+
+        # Can we find a specific page?
+        self.browser.find_element_by_link_text('Find Page').click()
+
+        self.assertIn('find-page', self.browser.current_url)
