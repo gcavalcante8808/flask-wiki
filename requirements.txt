@@ -10,3 +10,5 @@ mixer
 python-slugify
 markdown2
 slugify
+selenium
+xvfbwrapper
