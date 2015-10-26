@@ -12,7 +12,7 @@ class FrontendTestCase(LiveServerTestCase):
         return app
 
     def setUp(self):
-        self.xvfb = Xvfb(width=1024,height=768)
+        self.xvfb = Xvfb(width=1024, height=768)
         self.xvfb.start()
         self.browser = webdriver.Firefox()
 
