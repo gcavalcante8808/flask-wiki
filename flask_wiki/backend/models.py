@@ -7,7 +7,8 @@ from slugify import slugify
 
 db = SQLAlchemy()
 
-#TODO: Add Owner and other security fields later.
+
+# TODO: Add Owner and other security fields later.
 class Page(db.Model):
     """
     Implements the Page Model.
