@@ -3,7 +3,7 @@ from flask import url_for
 from flask.ext.testing import TestCase
 from flask_wiki.backend.models import Page
 from flask_wiki.backend.backend import db, mixer, app
-from flask_wiki.backend.custom_serialization_fields import GUIDSerializationField
+from flask_wiki.backend.serialization_fields import GUIDSerializationField
 from slugify import slugify
 
 os.environ['CONFIG_MODULE'] = 'config.test'
@@ -45,8 +45,9 @@ class BackendTestCase(TestCase):
     def test_create_new_page(self):
         # Try to create a New page using the API.
         # TODO: Headers are not working with flask testing. Verify.
+        # header={"Content-Type": "application/json"}
         url = url_for('pages-list')
-        header={"Content-Type": "application/json"}
+
         data = {
             "name": "Unittest Page",
             "raw_content": "My Title\n====="
@@ -81,10 +82,12 @@ class BackendTestCase(TestCase):
         data = {
             "raw_content": "UnitTest\n=======",
         }
-        # TODO: Verify why the response is 200 but in browser it returns 204 correctly.
+        # TODO: Verify why the response is 200 but in browser
+        # it returns 204 correctly.
         response = self.client.patch(url, data=data)
 
-        self.fail('The test cant find the specified page for now. Browser is working.')
+        self.fail('The test cant find the specified page for now. '
+                  'Browser is working.')
         self.assertEqual(response.status_code, 204)
 
         response = self.client.get(url)
