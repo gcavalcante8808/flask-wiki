@@ -1,5 +1,6 @@
 import markdown2
-from flask_restful import Resource, reqparse, fields, marshal_with, marshal, abort
+from flask_restful import Resource, reqparse, fields, marshal_with, marshal,\
+    abort
 from flask_wiki.backend.models import Page, db
 
 page_fields = {
@@ -13,7 +14,7 @@ page_fields = {
 page_parser = reqparse.RequestParser()
 page_parser.add_argument('guid', type=str, required=False)
 page_parser.add_argument('name', type=str, required=False)
-page_parser.add_argument('raw_content', type=str,required=False)
+page_parser.add_argument('raw_content', type=str, required=False)
 page_parser.add_argument('rendered_content', type=str, required=False)
 page_parser.add_argument('slug', type=str, required=False)
 
@@ -35,14 +36,15 @@ class PageView(Resource):
         return pages
 
     def post(self):
-        # Get a a object and verify if exists; if it does, return a 422 code and if not, create it.
+        # Get a a object and verify if exists;
+        # if it does, return a 422 code and if not, create it.
         parser = reqparse.RequestParser()
         parser.add_argument('raw_content', type=str)
         parser.add_argument('name', type=str)
         parser.add_argument('rendered_content', type=str)
         args = parser.parse_args()
 
-        #serializer = page_schema.dump(args)
+        # serializer = page_schema.dump(args)
 
         r = Page.query.filter_by(name=args.get('name')).first()
         if r:
@@ -57,7 +59,7 @@ class PageView(Resource):
 
         return marshal(result, page_fields), 201
 
-        #return serializer.errors, 400
+        # return serializer.errors, 400
 
     def put(self):
         # Stub for NotImplemented
