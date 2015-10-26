@@ -1,7 +1,21 @@
 {% extends "pages/base.html" %}
 {% block content %}
-      <div class="starter-template container">
-        <h1>Bootstrap starter template</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-      </div>
+
+<section id="page-detail" ng-controller="PageDetail">
+    <div class="overlay">
+        <div class="container">
+            <div class="col-md-6 wow fadeInUp" data-wow-dealy="'0.6s">
+                {% raw %}
+                <div ng-bind-html="data.rendered_content | sanitize">
+                </div>
+
+                <div ng-if="errors">
+                    The Following error ocurred on the backend:
+                    {{ errors }}
+                </div>
+                {% endraw %}
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock content %}

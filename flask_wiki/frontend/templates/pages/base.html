@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <base href="'/">
+    <base href="/">
     <title>Home</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
@@ -18,8 +18,8 @@
         <div class="container">
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="{{ url_for('frontend-pages', page='find-page')}}">Find Page</a></li>
+                    <li class="active"><a href="{{ url_for('frontend-pages', page='index')}}" target="_self">Home</a></li>
+                    <li><a href="{{ url_for('frontend-pages', page='find-page')}}" target="_self">Find Page</a></li>
                 </ul>
             </div>
         </div>
@@ -32,5 +32,6 @@
     <script src="{{ url_for('static', filename='bower_components/angular/angular.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bower_components/angular-bootstrap/ui-bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bower_components/angular-route/angular-route.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/wiki.controllers.js')}}"></script>
 </body>
 </html>
