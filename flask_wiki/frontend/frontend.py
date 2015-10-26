@@ -1,6 +1,5 @@
 from flask import Flask, render_template, abort, redirect, url_for
 from flask.ext.script import Manager
-
 from jinja2 import TemplateNotFound
 
 app = Flask(__name__)
@@ -22,7 +21,7 @@ def show(page='index'):
     :return: template.
     """
     try:
-        return render_template('pages/%s.html' % page)
+        return render_template('pages/index.html')
     except (TemplateNotFound,):
         abort(404)
 
