@@ -1,17 +1,33 @@
-import unittest
+from flask import url_for
+from xvfbwrapper import Xvfb
+from flask.ext.testing import LiveServerTestCase
+from selenium import webdriver
 from flask_wiki.frontend.frontend import app
 
 
-class FrontEndTestCase(unittest.TestCase):
+class FrontendTestCase(LiveServerTestCase):
     """
-    Test All Wiki pages and features.
+    Test frontend access through firefox webdriver
     """
+    def create_app(self):
+        return app
+
     def setUp(self):
-        self.client = app.test_client()
+        self.xvfb = Xvfb(width=1024,height=768)
+        self.xvfb.start()
+        self.browser = webdriver.Firefox()
+
+    def tearDown(self):
+        self.browser.quit()
+        self.xvfb.stop()
 
     def test_index_access(self):
-        request = self.client.get('/')
-        assert 'Home' in str(request.data)
+        """
+        Try to Access the first page.
+        :return:
+        """
+        url = self.get_server_url()
+        print(url)
+        self.browser.get(url)
 
-    def test_create_new_page(self):
-        pass
+        self.assertIn('Home', self.browser.title)
