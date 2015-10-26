@@ -35,3 +35,9 @@ class FrontendTestCase(LiveServerTestCase):
         self.browser.find_element_by_link_text('Find Page').click()
 
         self.assertIn('find-page', self.browser.current_url)
+
+        self.fail('Implement Find Page.')
+        self.browser.find_element_by_id('search-field').text('index')
+        self.browser.find_element_by_link_text('Search').click()
+
+        self.browser.find_elements_by_link_text('Index')
