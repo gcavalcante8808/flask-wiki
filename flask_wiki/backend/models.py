@@ -1,4 +1,5 @@
 import uuid
+import markdown2
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy import UniqueConstraint, event
 from flask_wiki.backend.custom_fields import GUIDField
@@ -29,4 +30,9 @@ class Page(db.Model):
 def make_slug(mapper, connection, target):
     target.slug = slugify(target.name)
 
+
+def render_html(mapper, connection, target):
+    target.rendered_content = markdown2.markdown(target.raw_content)
+
 event.listen(Page, 'before_insert', make_slug)
+event.listen(Page, 'before_insert', render_html)
