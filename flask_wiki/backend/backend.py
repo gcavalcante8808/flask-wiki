@@ -17,8 +17,9 @@ app.config['BOOTSTRAP'] = True
 
 
 app.config['DATABASE'] = 'wiki.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////%s/%s' % (PROJECT_ROOT_PATH,
-                                                              app.config.get('DATABASE'))
+db_url = 'sqlite:////%s/%s' % (PROJECT_ROOT_PATH, app.config.get('DATABASE'))
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+
 
 # Database Configuration
 # Use test_request_context is some kind of sorcery, but works?!
