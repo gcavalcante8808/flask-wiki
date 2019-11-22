@@ -1,5 +1,5 @@
 from flask import Flask, render_template, abort, redirect, url_for
-from flask.ext.script import Manager
+from flask_script import Manager
 from jinja2 import TemplateNotFound
 
 app = Flask(__name__)

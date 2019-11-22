@@ -1,7 +1,7 @@
 import os
 from flask import Flask
-from flask.ext.script import Manager
-from flask.ext.migrate import Migrate, MigrateCommand
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 from flask_restful import Api
 from flask_marshmallow import Marshmallow
 from mixer.backend.flask import mixer

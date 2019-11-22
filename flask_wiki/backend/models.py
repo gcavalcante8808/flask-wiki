@@ -1,6 +1,6 @@
 import uuid
 import markdown2
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import UniqueConstraint, event
 from flask_wiki.backend.custom_fields import GUIDField
 from slugify import slugify

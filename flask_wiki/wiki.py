@@ -9,5 +9,5 @@ application = DispatcherMiddleware(frontend.app,
                                    {'/api': backend.app})
 
 if debug:
-    run_simple('localhost', 8000, application, use_reloader=True,
+    run_simple('0.0.0.0', 8000, application, use_reloader=True,
                use_debugger=True, use_evalex=True)

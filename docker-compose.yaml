@@ -1,0 +1,12 @@
+version: '2.2'
+
+services:
+  app:
+    image: flask-wiki:latest
+    build: .
+    working_dir: /usr/src
+    command: ["python", "wiki.py"]
+    volumes:
+      - ./flask_wiki:/usr/src
+    ports:
+      - 8000:8000

@@ -1,6 +1,6 @@
 from xvfbwrapper import Xvfb
 from selenium import webdriver
-from flask.ext.testing import LiveServerTestCase
+from flask_testing import LiveServerTestCase
 from flask_wiki.frontend.frontend import app
 
 

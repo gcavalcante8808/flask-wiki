@@ -1,6 +1,6 @@
 import os
 from flask import url_for
-from flask.ext.testing import TestCase
+from flask_testing import TestCase
 from flask_wiki.backend.models import Page
 from flask_wiki.backend.backend import db, mixer, app
 from flask_wiki.backend.serialization_fields import GUIDSerializationField
